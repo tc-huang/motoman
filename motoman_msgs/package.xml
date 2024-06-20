@@ -3,14 +3,32 @@
 <package format="3">
   <name>motoman_msgs</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Messages for the multi-group interface of motoman_driver.</description>
+  
+  <!-- The original author is Thiago de Freitas -->
+  <!-- <author>Thiago de Freitas</author>
+  <maintainer email="shaun.edwards@gmail.com">Shaun Edwards</maintainer>
+  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn (TU Delft Robotics Institute)</maintainer> -->
+  <author>tc-huang</author>
   <maintainer email="tzu.chun.huang.tw@gmail.com">tc-huang</maintainer>
   <license>BSD-3-Clause</license>
+
+  <url type="website">https://github.com/tc-huang/motoman</url>
+  <url type="bugtracker">https://github.com/tc-huang/motoman</url>
+  <url type="repository">https://github.com/tc-huang/motoman</url>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
+
+  <!-- <build_depend>message_generation</build_depend>
+  <build_export_depend>message_runtime</build_export_depend>
+  <exec_depend>message_runtime</exec_depend> -->
+
+  <!-- <depend>industrial_msgs</depend> -->
+  <depend>std_msgs</depend>
+  <depend>trajectory_msgs</depend>
 
   <export>
     <build_type>ament_python</build_type>
