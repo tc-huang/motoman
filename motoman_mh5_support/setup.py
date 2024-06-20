@@ -16,7 +16,7 @@ setup(
     maintainer='tc-huang',
     maintainer_email='tzu.chun.huang.tw@gmail.com',
     description='TODO: Package description',
-    license='Apache-2.0',
+    license='BSD-3-Clause',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
