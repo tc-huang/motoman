@@ -65,3 +65,6 @@ motoman_driver/MotoPlus/.vs/MpRosAllControllers/FileContentIndex/read.lock
 *.db-wal
 
 .vscode
+build
+install
+log
