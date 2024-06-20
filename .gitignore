@@ -63,3 +63,5 @@ motoman_driver/MotoPlus/_buildLog/MotoROSYRC1000u.log
 motoman_driver/MotoPlus/.vs/MpRosAllControllers/FileContentIndex/read.lock
 *.db-shm
 *.db-wal
+
+.vscode
