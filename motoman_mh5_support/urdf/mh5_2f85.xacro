@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<robot name="motoman_mh5_2f85" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find motoman_mh5_support)/urdf/mh5_macro.xacro" />
+    <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro" />
+    
+    <xacro:motoman_mh5 prefix=""/>
+    
+    <xacro:robotiq_gripper name="robotiq_2f85" prefix="" parent="link_t">
+        <origin xyz="0 0 0" rpy="1.5708 0 1.5708" />
+    </xacro:robotiq_gripper>
+</robot>
+
