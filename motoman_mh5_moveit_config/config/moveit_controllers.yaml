@@ -17,3 +17,5 @@ moveit_simple_controller_manager:
       - joint_r
       - joint_b
       - joint_t
+    action_ns: follow_joint_trajectory
+    default: true
