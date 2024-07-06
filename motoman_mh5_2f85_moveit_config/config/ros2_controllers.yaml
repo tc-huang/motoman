@@ -1,7 +1,7 @@
 # This config file is used by ros2_control
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 1 #100  # Hz
 
     mh5_arm_controller:
       type: joint_trajectory_controller/JointTrajectoryController
@@ -27,7 +27,12 @@ mh5_arm_controller:
       - position
     state_interfaces:
       - position
-      - velocity
+      # - velocity
 gripper_controller:
   ros__parameters:
     joint: robotiq_85_left_knuckle_joint
+    # command_interfaces:
+    #   - position
+    # state_interfaces:
+    #   - position
+      # - velocity
