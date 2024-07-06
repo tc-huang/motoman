@@ -68,3 +68,5 @@ motoman_driver/MotoPlus/.vs/MpRosAllControllers/FileContentIndex/read.lock
 build
 install
 log
+ros2_robotiq_gripper
+ros2_control_demos
