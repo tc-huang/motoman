@@ -13,10 +13,26 @@ namespace control
 
     void Communication::connect(short unsigned int port)
     {
+        std::cout << "PORT "<< port << std::endl;
         struct sockaddr_in serv_addr;
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_port = htons(port);
         serv_addr.sin_addr.s_addr = INADDR_ANY; //inet_addr(IP);
+        if (::connect(socket_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+            std::cerr << "Connection Failed" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    void Communication::connect(const char* ip, short unsigned int port)
+    {
+        std::cout << "IP " << ip << std::endl;
+        std::cout << "PORT "<< port << std::endl;
+        struct sockaddr_in serv_addr;
+        bzero(&serv_addr,sizeof(serv_addr));	
+        serv_addr.sin_family = PF_INET;
+        serv_addr.sin_port = htons(port);
+        serv_addr.sin_addr.s_addr = inet_addr(ip);
         if (::connect(socket_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
             std::cerr << "Connection Failed" << std::endl;
             exit(EXIT_FAILURE);
@@ -91,6 +107,12 @@ namespace control
     void Command::power_on(short unsigned int port)
     {
         communication.connect(port);
+        on = true;
+    }
+
+    void Command::power_on(const char* ip, short unsigned int port)
+    {
+        communication.connect(ip, port);
         on = true;
     }
 

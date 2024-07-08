@@ -34,7 +34,7 @@ namespace control
         public:
             void init();
             void connect(short unsigned int port);
-            // void connect(const char* ip, const char* port);
+            void connect(const char* ip, short unsigned int port);
             void send(const char* message);
             int receive();
             void close();
@@ -49,6 +49,7 @@ namespace control
             Command();
             ~Command();
             void power_on(short unsigned int port);
+            void power_on(const char* ip, short unsigned int port);
             void power_off();
             int write_tcp(float x, float y, float z, float rx, float ry, float rz, int speed);
             int write_joint(float b, float l, float r, float s, float t, float u, int speed);
