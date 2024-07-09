@@ -1,4 +1,4 @@
-#include "control.hpp"
+#include "motoman_mh5_driver/control.hpp"
 
 namespace control
 {
@@ -132,6 +132,7 @@ namespace control
         cartesian_milli[2] = z;
         cartesian_milli[3] = rx;
         cartesian_milli[4] = ry;
+        cartesian_milli[5] = rz;
 
         milli2micro();
 

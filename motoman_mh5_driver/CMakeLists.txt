@@ -28,6 +28,7 @@ add_library(
   motoman_mh5_driver
   SHARED
   src/motoman_mh5_driver.cpp
+  src/control.cpp
 )
 target_compile_features(motoman_mh5_driver PUBLIC cxx_std_17)
 target_include_directories(motoman_mh5_driver PUBLIC
@@ -50,6 +51,10 @@ pluginlib_export_plugin_description_file(hardware_interface motoman_mh5_driver.x
 install(
   DIRECTORY include/
   DESTINATION include/motoman_mh5_driver
+)
+install(
+  DIRECTORY include/
+  DESTINATION include/control
 )
 # install(
 #   DIRECTORY description/launch description/ros2_control description/urdf

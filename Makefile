@@ -2,8 +2,8 @@
 # 	@echo "Building..."
 # 	. /opt/ros/humble/setup.sh && colcon build --cmake-args -DTESSERACT_BUILD_FCL=OFF -DBUILD_RENDERING=OFF
 
-# SETUP=. /opt/ros/humble/setup.sh && . /ros2_robotiq_gripper/install/setup.sh &&  . install/setup.sh
-SETUP=. /opt/ros/humble/setup.sh &&  . install/setup.sh
+SETUP=. /opt/ros/humble/setup.sh && . /ros2_robotiq_gripper/install/setup.sh &&  . install/setup.sh
+# SETUP=. /opt/ros/humble/setup.sh &&  . install/setup.sh
 
 install:
 	@echo "Installing..."

@@ -117,7 +117,13 @@ namespace motoman_mh5_driver
 
     hardware_interface::return_type MotomanMH5Driver::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/){
         RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "write");
-        command.write_joint(hw_commands_[0], hw_commands_[1], hw_commands_[2], hw_commands_[3], hw_commands_[4], hw_commands_[5], SPEED);
+        for(int i = 0; i < 6; i++){
+            if (abs(hw_commands_[i] - hw_states_[i]) >= 0.0001)
+            {
+                command.write_joint(hw_commands_[0], hw_commands_[1], hw_commands_[2], hw_commands_[3], hw_commands_[4], hw_commands_[5], SPEED);
+                break;
+            }
+        }
         return hardware_interface::return_type::OK;
     }
 }   // namespace motoman_mh5_driver
