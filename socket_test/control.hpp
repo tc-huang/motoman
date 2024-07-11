@@ -27,6 +27,8 @@
 #define PULSE_PER_DEGREE_B  910.2230627
 #define PULSE_PER_DEGREE_T -568.8894315
 
+≈
+
 namespace control
 {
     class Communication
