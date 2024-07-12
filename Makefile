@@ -4,6 +4,7 @@
 
 SETUP=. /opt/ros/humble/setup.sh && . /ros2_robotiq_gripper/install/setup.sh &&  . install/setup.sh
 # SETUP=. /opt/ros/humble/setup.sh &&  . install/setup.sh
+PROJECT_ROOT := $(shell pwd)
 
 install:
 	@echo "Installing..."
@@ -78,4 +79,15 @@ list_pkg:
 	@echo "List Package..."
 	$(SETUP) && ros2 pkg list
 
-.PHONY: build clean install import launch graph console
+docker_build:
+	@echo "Docker compose build"
+	sudo docker compose -f "$(PROJECT_ROOT)docker/docker-compose-gui-nvidia.yml" up --build
+
+docker_exec:
+	sudo docker exec -it ros2_humble_docker /bin/bash
+
+node_camera:
+	sudo docker exec -it ros2_humble_docker /bin/bash &&\
+	ros2 run realsense2_camera realsense2_camera_node
+
+.PHONY: build clean install import launch graph console docker_build docker_exec
