@@ -70,3 +70,6 @@ install
 log
 ros2_robotiq_gripper
 ros2_control_demos
+robotic_drawing
+socket_test
+gripper_control.py
