@@ -11,8 +11,7 @@
                   <plugin>mock_components/GenericSystem</plugin>
                 </xacro:if>
                 <xacro:unless value="${fake_hardware}">
-                  <!-- By default, set up controllers for simulation. This won't work on real hardware -->
-                  <plugin>mock_components/GenericSystem</plugin>
+                  <plugin>motoman_mh5_driver/MotomanMH5Driver</plugin>
                 </xacro:unless>
             </hardware>
             <joint name="joint_s">

@@ -88,7 +88,7 @@ list_pkg:
 
 docker_build:
 	@echo "Docker compose build"
-	sudo docker compose -f "$(PROJECT_ROOT)docker/docker-compose-gui-nvidia.yml" up --build
+	sudo docker compose -f "$(PROJECT_ROOT)/docker/docker-compose-gui-nvidia.yml" up --build
 
 docker_exec:
 	sudo docker exec -it ros2_humble_docker /bin/bash

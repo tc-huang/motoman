@@ -16,7 +16,7 @@
 namespace motoman_mh5_driver
 {
     hardware_interface::CallbackReturn MotomanMH5Driver::on_init(const hardware_interface::HardwareInfo & info){
-        RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "on_init");
+        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "on_init");
         if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS)
         {
             return CallbackReturn::ERROR;
@@ -34,7 +34,7 @@ namespace motoman_mh5_driver
     }
 
     hardware_interface::CallbackReturn MotomanMH5Driver::on_configure(const rclcpp_lifecycle::State & /*previous_state*/){
-        RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "on_configure");
+        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "on_configure");
 
         // reset values always when configuring hardware
         for (uint i = 0; i < hw_states_.size(); i++)
@@ -43,7 +43,7 @@ namespace motoman_mh5_driver
             hw_commands_[i] = 0;
         }
 
-        RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "Successfully configured!");
+        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "Successfully configured!");
         return hardware_interface::CallbackReturn::SUCCESS;
     }
 
@@ -73,7 +73,7 @@ namespace motoman_mh5_driver
     }
 
     hardware_interface::CallbackReturn MotomanMH5Driver::on_activate(const rclcpp_lifecycle::State & /*previous_state*/){
-        RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "on_activate");
+        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "on_activate");
 
         // command and state should be equal when starting
         for (uint i = 0; i < hw_states_.size(); i++)
@@ -84,7 +84,7 @@ namespace motoman_mh5_driver
         command.init();
         command.power_on(IP, PORT);
 
-        RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "Successfully activated!");
+        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "Successfully activated!");
 
         return hardware_interface::CallbackReturn::SUCCESS;
     }
@@ -92,7 +92,7 @@ namespace motoman_mh5_driver
     hardware_interface::CallbackReturn MotomanMH5Driver::on_deactivate(
     const rclcpp_lifecycle::State & /*previous_state*/)
     {
-        RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "on_deactivate");
+        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "on_deactivate");
         command.power_off();
         return hardware_interface::CallbackReturn::SUCCESS;
     }
@@ -107,7 +107,7 @@ namespace motoman_mh5_driver
     // }
 
     hardware_interface::return_type MotomanMH5Driver::read(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/){
-        RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "read");
+        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "read");
         command.read_joint();
         for(int i = 0; i < 6; i++){
             hw_states_[i] = command.radians[i];
@@ -116,7 +116,7 @@ namespace motoman_mh5_driver
     }
 
     hardware_interface::return_type MotomanMH5Driver::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/){
-        RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "write");
+        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "write");
         for(int i = 0; i < 6; i++){
             if (abs(hw_commands_[i] - hw_states_[i]) >= 0.0001)
             {

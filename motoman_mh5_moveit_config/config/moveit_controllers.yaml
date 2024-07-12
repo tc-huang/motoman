@@ -5,6 +5,7 @@ moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControll
 moveit_simple_controller_manager:
   controller_names:
     - mh5_arm_controller
+    - robotiq_gripper_controller
 
   mh5_arm_controller:
     type: FollowJointTrajectory
@@ -19,8 +20,7 @@ moveit_simple_controller_manager:
       - joint_t
     action_ns: follow_joint_trajectory
     default: true
-  
-  gripper_controller:
+  robotiq_gripper_controller:
     type: GripperCommand
     joints:
       - robotiq_85_left_knuckle_joint
