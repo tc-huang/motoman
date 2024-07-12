@@ -3,12 +3,21 @@
   "dockerFile": "Dockerfile",
   "runArgs": [
     "--privileged",
+    "--user=root",
+    // "--device_cgroup_rules=c 81:* rmw",
+    // "--device_cgroup_rules=c 189:* rmw",
+    // "-v /dev:/dev",
+    // "-t"
+    "--mount", "source=/dev,target=/dev"
+    // "--device=/dev"
     // "--network=host",
   ],
   "workspaceMount": "source=${localWorkspaceFolder},target=/${localWorkspaceFolderBasename},type=bind",
   "workspaceFolder": "/${localWorkspaceFolderBasename}",
   "mounts": [
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.bash_history,target=/home/vscode/.bash_history,type=bind"
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.bash_history,target=/home/vscode/.bash_history,type=bind",
+    // "source=/dev/bus/usb,target=/dev/bus/usb,type=bind,consistency=cached",
+    // "source=/dev,target=/dev,type=bind,consistency=cached"
   ],
   // "features":{
   //   "ghcr.io/ghcr.io/devcontainers/features/desktop-lite:1":{}

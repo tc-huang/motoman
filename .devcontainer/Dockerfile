@@ -21,6 +21,11 @@ RUN . /opt/ros/humble/setup.sh && colcon build
 
 RUN git clone https://github.com/tc-huang/motoman.git -b feature/ros2-mh5
 RUN rosdep install --from-paths . -iry --skip-keys warehouse_ros_mongo
+
+RUN apt update && apt install -y ros-humble-librealsense2* ros-humble-realsense2-*
+
 WORKDIR /motoman
+
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 
 # CMD ["bash", "-c", "source /opt/ros/humble/setup.bash && source /motoman/install/setup.bash"]
