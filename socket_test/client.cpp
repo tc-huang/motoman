@@ -1,5 +1,7 @@
 #include "control.hpp"
 
+#define SPEED 100
+
 int main()
 {
 	// control::Communication communication;
@@ -21,10 +23,11 @@ int main()
 	std::cout << "Power on" << std::endl;
 	command.power_on(IP, PORT);
 	// command.write_tcp(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0);
-	// command.write_joint(7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0);
+	// command.write_joint(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, SPEED);
 	// command.read_tcp();
 	// command.read_joint();
 	std::cout << "Power off" << std::endl;
+	sleep(10);
 	command.power_off();
 	std::cout << "End" << std::endl;
 	
