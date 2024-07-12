@@ -1,14 +1,34 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="motoman_mh5">
+    <!-- Arguments -->
     <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
+    <xacro:arg name="use_fake_hardware" default="true"/>
+    <xacro:arg name="attach_2f85" default="true"/>
+    <xacro:arg name="parent" default="link_t"/>
+    <xacro:arg name="prefix" default=""/>
+
+
 
     <!-- Import motoman_mh5 urdf file -->
-    <xacro:include filename="$(find motoman_mh5_support)/urdf/mh5.urdf" />
+    <xacro:include filename="$(find motoman_mh5_support)/urdf/mh5_macro.xacro" />
+    <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro" />
+    
 
     <!-- Import control_xacro -->
     <xacro:include filename="motoman_mh5.ros2_control.xacro" />
 
+    <xacro:if value="$(arg use_fake_hardware)">
+        <xacro:motoman_mh5_ros2_control name="MH5System" initial_positions_file="$(arg initial_positions_file)" use_fake_hardware="$(arg use_fake_hardware)"/>
+    </xacro:if>
 
-    <xacro:motoman_mh5_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
+    <!-- Motoman MH5 -->
+	<xacro:motoman_mh5 prefix="$(arg prefix)"/>
+    
+    <!-- Robotiq 2F85 -->
+    <xacro:if value="$(arg attach_2f85)">
+        <xacro:robotiq_gripper name="RobotiqGripperHardwareInterface" prefix="$(arg prefix)" parent="$(arg parent)" use_fake_hardware="$(arg use_fake_hardware)">
+            <origin xyz="0 0 0" rpy="1.5708 0 1.5708" />
+        </xacro:robotiq_gripper>
+    </xacro:if>
 
 </robot>

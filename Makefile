@@ -62,14 +62,21 @@ source:
 	@echo "Sourcing..."
 	$(SETUP)
 
+test:
+	@echo "Building..."
+	. /opt/ros/humble/setup.sh && . /ros2_robotiq_gripper/install/setup.sh && colcon build --packages-skip-regex ros2_control
+	@echo "Demo..."
+	# $(SETUP) &&  ros2 launch motoman_mh5_2f85_moveit_config demo.launch.py
+	$(SETUP) &&  ros2 launch motoman_mh5_moveit_config demo.launch.py
+
 build:
 	@echo "Building..."
 	. /opt/ros/humble/setup.sh && . /ros2_robotiq_gripper/install/setup.sh && colcon build --packages-skip-regex ros2_control
 
 demo:
 	@echo "Demo..."
-	$(SETUP) &&  ros2 launch motoman_mh5_2f85_moveit_config demo.launch.py
-	# $(SETUP) &&  ros2 launch motoman_mh5_moveit_config demo.launch.py
+	# $(SETUP) &&  ros2 launch motoman_mh5_2f85_moveit_config demo.launch.py
+	$(SETUP) &&  ros2 launch motoman_mh5_moveit_config demo.launch.py
 
 list_node:
 	@echo "List Node..."
@@ -90,4 +97,4 @@ node_camera:
 	sudo docker exec -it ros2_humble_docker /bin/bash &&\
 	ros2 run realsense2_camera realsense2_camera_node
 
-.PHONY: build clean install import launch graph console docker_build docker_exec
+.PHONY: build clean install import launch graph console docker_build docker_exec test

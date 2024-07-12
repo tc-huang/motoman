@@ -23,4 +23,4 @@ mh5_arm_controller:
       - position
     state_interfaces:
       - position
-      - velocity
+      # - velocity
