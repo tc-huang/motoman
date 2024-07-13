@@ -1,291 +1,169 @@
-from moveit_configs_utils import MoveItConfigsBuilder
-# from moveit_configs_utils.launches import generate_demo_launch
-from launch import LaunchDescription
-from launch.actions import (
-    DeclareLaunchArgument,
-    IncludeLaunchDescription,
-)
-from launch.conditions import IfCondition
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
-
-from launch_ros.actions import Node
-from launch_ros.parameter_descriptions import ParameterValue
-
-from srdfdom.srdf import SRDF
-
-from moveit_configs_utils.launch_utils import (
-    add_debuggable_node,
-    DeclareBooleanLaunchArg,
-)
-
-import launch
-from launch.substitutions import (
-    Command,
-    FindExecutable,
-    LaunchConfiguration,
-    PathJoinSubstitution,
-)
-from launch.conditions import IfCondition
-import launch_ros
+# References:
+# [1] https://github.com/moveit/moveit_resources/blob/ros2/panda_moveit_config/launch/demo.launch.py
 import os
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.conditions import IfCondition
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
+from ament_index_python.packages import get_package_share_directory
+from moveit_configs_utils import MoveItConfigsBuilder
+
 
 def generate_launch_description():
-    moveit_config = MoveItConfigsBuilder("motoman_mh5", package_name="motoman_mh5_moveit_config").to_moveit_configs()
-#     return generate_demo_launch(moveit_config)
-    """
-    Launches a self contained demo
 
-    launch_package_path is optional to use different launch and config packages
-
-    Includes
-     * static_virtual_joint_tfs
-     * robot_state_publisher
-     * move_group
-     * moveit_rviz
-     * warehouse_db (optional)
-     * ros2_control_node + controller spawners
-    """
-    launch_package_path = None
-    if launch_package_path == None:
-        launch_package_path = moveit_config.package_path
-
-    ld = LaunchDescription()
-
-    # https://github.com/tc-huang/ros2_robotiq_gripper/blob/main/robotiq_description/launch/robotiq_control.launch.py
-    description_pkg_share = launch_ros.substitutions.FindPackageShare(
-        package="robotiq_description"
-    ).find("robotiq_description")
-
-    default_model_path = os.path.join(
-        description_pkg_share, "urdf", "robotiq_2f_85_gripper.urdf.xacro"
+    # Command-line arguments
+    rviz_config_arg = DeclareLaunchArgument(
+        "rviz_config",
+        default_value="moveit.rviz",
+        description="RViz configuration file",
     )
 
-    ld.add_action(
-        launch.actions.DeclareLaunchArgument(
-            name="model",
-            default_value=default_model_path,
-            description="Absolute path to gripper URDF file",
+    # db_arg = DeclareLaunchArgument(
+    #     "db", default_value="False", description="Database flag"
+    # )
+
+    # ros2_control_hardware_type = DeclareLaunchArgument(
+    #     "ros2_control_hardware_type",
+    #     default_value="mock_components",
+    #     description="ROS 2 control hardware interface type to use for the launch file -- possible values: [mock_components, isaac]",
+    # )
+
+    moveit_config = (
+        MoveItConfigsBuilder("motoman_mh5")
+        .robot_description(
+            file_path="config/motoman_mh5.urdf.xacro",
+            # mappings={
+            #     "ros2_control_hardware_type": LaunchConfiguration(
+            #         "ros2_control_hardware_type"
+            #     )
+            # },
         )
+        .robot_description_semantic(file_path="config/motoman_mh5.srdf")
+        # .planning_scene_monitor(
+        #     publish_robot_description=True, publish_robot_description_semantic=True
+        # )
+        # .trajectory_execution(file_path="config/ros2_controllers.yaml")
+        # .planning_pipelines(
+        #     pipelines=["ompl", "chomp", "pilz_industrial_motion_planner"]#, "stomp"]
+        # )
+        .to_moveit_configs()
     )
 
-    # arm_description_pkg_share = launch_ros.substitutions.FindPackageShare(
-    #     package="motoman_mh5_moveit_config"
-    # ).find("motoman_mh5_moveit_config")
+    # Start the actual move_group node/action server
+    move_group_node = Node(
+        package="moveit_ros_move_group",
+        executable="move_group",
+        output="screen",
+        parameters=[moveit_config.to_dict()],
+        arguments=["--ros-args", "--log-level", "info"],
+    )
 
-    # arm_default_model_path = os.path.join(
-    #     arm_description_pkg_share, "config", "motoman_mh5.urdf.xacro"
+    # RViz
+    rviz_base = LaunchConfiguration("rviz_config")
+    rviz_config = PathJoinSubstitution(
+        [FindPackageShare("motoman_mh5_moveit_config"), "config", rviz_base]
+    )
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="log",
+        arguments=["-d", rviz_config],
+        parameters=[
+            moveit_config.robot_description,
+            moveit_config.robot_description_semantic,
+            moveit_config.planning_pipelines,
+            moveit_config.robot_description_kinematics,
+            moveit_config.joint_limits,
+        ],
+    )
+
+    # Static TF
+    static_tf_node = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="static_transform_publisher",
+        output="log",
+        arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "world", "base_link"],
+    )
+
+    # Publish TF
+    robot_state_publisher = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        name="robot_state_publisher",
+        output="both",
+        parameters=[moveit_config.robot_description],
+    )
+
+    # ros2_control using FakeSystem as hardware
+    ros2_controllers_path = os.path.join(
+        get_package_share_directory("motoman_mh5_moveit_config"),
+        "config",
+        "ros2_controllers.yaml",
+    )
+
+    ros2_control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[ros2_controllers_path],
+        remappings=[
+            ("/controller_manager/robot_description", "/robot_description"),
+        ],
+        output="screen",
+    )
+
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "joint_state_broadcaster",
+            "--controller-manager",
+            "/controller_manager",
+        ],
+    )
+
+    panda_arm_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["mh5_arm_controller", "-c", "/controller_manager"],
+    )
+
+    panda_hand_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["robotiq_gripper_controller", "-c", "/controller_manager"],
+    )
+
+    # Warehouse mongodb server
+    # db_config = LaunchConfiguration("db")
+    # mongodb_server_node = Node(
+    #     package="warehouse_ros_mongo",
+    #     executable="mongo_wrapper_ros.py",
+    #     parameters=[
+    #         {"warehouse_port": 33829},
+    #         {"warehouse_host": "localhost"},
+    #         {"warehouse_plugin": "warehouse_ros_mongo::MongoDatabaseConnection"},
+    #     ],
+    #     output="screen",
+    #     condition=IfCondition(db_config),
     # )
 
-    # ld.add_action(
-    #     launch.actions.DeclareLaunchArgument(
-    #         name="model",
-    #         default_value=arm_default_model_path,
-    #         description="Absolute path to gripper URDF file",
-    #     )
-    # )
-
-
-    robot_description_content = Command(
+    return LaunchDescription(
         [
-            PathJoinSubstitution([FindExecutable(name="xacro")]),
-            " ",
-            LaunchConfiguration("model"),
-            " ",
-            "use_fake_hardware:=false",
+            rviz_config_arg,
+            # db_arg,
+            # ros2_control_hardware_type,
+            rviz_node,
+            static_tf_node,
+            robot_state_publisher,
+            move_group_node,
+            ros2_control_node,
+            joint_state_broadcaster_spawner,
+            panda_arm_controller_spawner,
+            panda_hand_controller_spawner,
+            # mongodb_server_node,
         ]
     )
-
-
-    robot_description_param = {
-        "robot_description": launch_ros.parameter_descriptions.ParameterValue(
-            robot_description_content, value_type=str
-        )
-    }
-
-    update_rate_config_file = PathJoinSubstitution(
-        [
-            description_pkg_share,
-            "config",
-            "robotiq_update_rate.yaml",
-        ]
-    )
-
-    controllers_file = "robotiq_controllers.yaml"
-    initial_joint_controllers = PathJoinSubstitution(
-        [description_pkg_share, "config", controllers_file]
-    )
-    """
-    """
-    ld.add_action(
-        Node(
-            package="controller_manager",
-            executable="ros2_control_node",
-            parameters=[
-                robot_description_param,
-                update_rate_config_file,
-                initial_joint_controllers,
-            ],
-            # parameters=[
-            #     # str(moveit_config.package_path / "config/ros2_controllers.yaml"),
-            #     initial_joint_controllers
-            # ],
-            # remappings=[
-            #     ("/controller_manager/robot_description", "/gripper_description"),
-            # ],
-        )
-    )
-
-    ld.add_action(
-        Node(
-            package="robot_state_publisher",
-            executable="robot_state_publisher",
-            parameters=[robot_description_param],
-        )
-    )
-
-    ld.add_action(
-        Node(
-            package="controller_manager",
-            executable="spawner",
-            arguments=[
-                "gripper_joint_state_broadcaster",
-                "--controller-manager",
-                "/controller_manager",
-            ],
-        )
-    )
-
-    ld.add_action(
-        Node(
-            package="controller_manager",
-            executable="spawner",
-            arguments=["robotiq_gripper_controller", "-c", "/controller_manager"],
-        )
-    )
-
-    ld.add_action(
-        Node(
-            package="controller_manager",
-            executable="spawner",
-            arguments=["robotiq_activation_controller", "-c", "/controller_manager"],
-        )
-    )
-    ################################################################################################3
-    ld.add_action(
-        DeclareBooleanLaunchArg(
-            "db",
-            default_value=False,
-            description="By default, we do not start a database (it can be large)",
-        )
-    )
-    ld.add_action(
-        DeclareBooleanLaunchArg(
-            "debug",
-            default_value=False,
-            description="By default, we are not in debug mode",
-        )
-    )
-    ld.add_action(DeclareBooleanLaunchArg("use_rviz", default_value=True))
-    # If there are virtual joints, broadcast static tf by including virtual_joints launch
-    virtual_joints_launch = (
-        launch_package_path / "launch/static_virtual_joint_tfs.launch.py"
-    )
-
-    if virtual_joints_launch.exists():
-        ld.add_action(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(str(virtual_joints_launch)),
-            )
-        )
-
-    # Given the published joint states, publish tf for the robot links
-    ld.add_action(
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                str(launch_package_path / "launch/rsp.launch.py")
-            ),
-        )
-    )
-
-    ld.add_action(
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                str(launch_package_path / "launch/move_group.launch.py")
-            ),
-        )
-    )
-
-    """
-    """
-    # Run Rviz and load the default config to see the state of the move_group node
-    ld.add_action(
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                str(launch_package_path / "launch/moveit_rviz.launch.py")
-            ),
-            condition=IfCondition(LaunchConfiguration("use_rviz")),
-        )
-    )
-
-    # If database loading was enabled, start mongodb as well
-    # ld.add_action(
-    #     IncludeLaunchDescription(
-    #         PythonLaunchDescriptionSource(
-    #             str(launch_package_path / "launch/warehouse_db.launch.py")
-    #         ),
-    #         condition=IfCondition(LaunchConfiguration("db")),
-    #     )
-    # )
-
-    # Fake joint driver
-    ld.add_action(
-        Node(
-            package="controller_manager",
-            executable="spawner",
-            arguments=[
-                "joint_state_broadcaster",
-                "--controller-manager",
-                "/controller_manager",
-            ],
-        )
-    )
-
-    ld.add_action(
-        Node(
-            package="controller_manager",
-            executable="spawner",
-            arguments=["robotiq_gripper_controller", "-c", "/controller_manager"],
-        )
-    )
-    ld.add_action(
-        Node(
-            package="controller_manager",
-            executable="spawner",
-            arguments=["robotiq_activation_controller", "-c", "/controller_manager"],
-            remappings=[
-                    ("/controller_manager/robot_description", "/robot_description"),
-                ],
-        )
-    )
-
-    # ld.add_action(
-    #     IncludeLaunchDescription(
-    #         PythonLaunchDescriptionSource(
-    #             str(launch_package_path / "launch/spawn_controllers.launch.py")
-    #         ),
-    #     )
-    # )
-    ld.add_action(
-        Node(
-            package="controller_manager",
-            executable="spawner",
-            arguments=["mh5_arm_controller", "-c", "/controller_manager"],
-        )
-    )
-
-
-
-    return ld
-
-
