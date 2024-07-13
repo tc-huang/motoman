@@ -41,7 +41,7 @@ namespace control
 
     void control::Communication::send(const char* message)
     {
-        std::cout << "Sned: " << message << std::endl;
+        // std::cout << "Sned: " << message << std::endl;
         int status = ::send(socket_fd, message, strlen(message), 0);
         if (status < 0) {
             std::cerr << "Send failed" << std::endl;
@@ -58,7 +58,7 @@ namespace control
             std::cerr << "Receive failed" << std::endl;
             exit(EXIT_FAILURE);
         }
-        else std::cout << "Server response: " << buffer << std::endl;
+        // else std::cout << "Server response: " << buffer << std::endl;
 
         int i = 0;
         int j = 0;
@@ -187,21 +187,21 @@ namespace control
         sprintf(message, "%d %d %d %d %d %d %d %d;", 0, 0, 0, 0, 0, 0, 0, GET_PULSE_POSITION);
         communication.send(message);
         communication.receive();
-        std::cout << "Pulse: ";
+        // std::cout << "Pulse: ";
         for (int i = 0; i < 6; i++) {
             pulse[i] = communication.receive_message[i];
-            std::cout << pulse[i] << " ";
+            // std::cout << pulse[i] << " ";
         }
-        std::cout << std::endl;
+        // std::cout << std::endl;
 
         pulse2degree();
         degree2radian();
 
-        std::cout << "Joint angle and radian: ";
-        for (int i = 0; i < 6; i++) {
-            std::cout << degrees[i] << " (" << radians[i] << ") ";
-        }
-        std::cout << std::endl;
+        // std::cout << "Joint angle and radian: ";
+        // for (int i = 0; i < 6; i++) {
+        //     std::cout << degrees[i] << " (" << radians[i] << ") ";
+        // }
+        // std::cout << std::endl;
     }
 
     void Command::pulse2degree()
