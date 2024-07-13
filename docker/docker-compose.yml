@@ -21,4 +21,4 @@ services:
     tty: true
     volumes:
       # - ../src:${CATKIN_WORKSPACE_DIR}/src
-      - ../../motoman_v1:/motoman
+      - ../../motoman:/motoman
