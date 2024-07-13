@@ -46,6 +46,10 @@ setup_assistant:
 # exp_dep:
 # 	vcs export --exact src > my_dependencies_exact.repos
 # 	vcs export --exact-with-tags src > my_dependencies_exact_with_tags.repos
+dep:
+	@echo "Git clone..."
+	git clone https://github.com/tc-huang/ros2_robotiq_gripper.git
+
 urdf:
 	@echo "URDF..."
 	$(SETUP) && xacro /motoman/motoman_mh5_support/urdf/mh5_2f85.xacro > /motoman/motoman_mh5_support/urdf/mh5_2f85.urdf
@@ -97,4 +101,4 @@ node_camera:
 	sudo docker exec -it ros2_humble_docker /bin/bash &&\
 	ros2 run realsense2_camera realsense2_camera_node
 
-.PHONY: build clean install import launch graph console docker_build docker_exec test
+.PHONY: build clean install import launch graph console docker_build docker_exec test dep
