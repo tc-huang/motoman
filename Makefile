@@ -9,6 +9,7 @@ PROJECT_ROOT := $(shell pwd)
 install:
 	@echo "Installing..."
 	apt-get update && rosdep install --from-paths . -iry --skip-keys warehouse_ros_mongo
+	apt-get update && apt-get install -y ros-humble-image-pipeline
 # 	# sudo apt-get install -y gazebo libgazebo-dev
 # 	# sudo apt-get install -y ros-humble-octomap
 # 	rosdep install --from-paths src -iry --skip-keys libvtk --skip-keys fcl --skip-keys taskflow
@@ -20,6 +21,17 @@ clean:
 setup_assistant:
 	@echo "Setup Assistant..."
 	$(SETUP) && ros2 launch moveit_setup_assistant setup_assistant.launch.py
+
+camera_calibration:
+# 	https://wiki.ros.org/camera_calibration
+#	https://docs.ros.org/en/rolling/p/camera_calibration/tutorial_mono.html
+	@echo "Camera calibraion..."
+#	108mm
+	ros2 run camera_calibration cameracalibrator --size 11x8 --square 0.02 image:=/camera/camera/color/image_raw camera:=/cmaera
+	cp /tmp/calibrationdata.tar.gz /motoman
+	
+camera_calibration_verify:
+	ros2 run camera_calibration cameracheck.py --size 11x8 monocular:=/forearm image:=image_rect
 
 # import:
 # 	@echo "Import..."
@@ -49,6 +61,7 @@ setup_assistant:
 dep:
 	@echo "Git clone..."
 	git clone https://github.com/tc-huang/ros2_robotiq_gripper.git
+	git clone https://github.com/RIF-Robotics/moveit2_calibration.git
 
 urdf:
 	@echo "URDF..."
@@ -98,7 +111,6 @@ docker_exec:
 	sudo docker exec -it ros2_humble_docker /bin/bash
 
 node_camera:
-	sudo docker exec -it ros2_humble_docker /bin/bash &&\
 	ros2 run realsense2_camera realsense2_camera_node
 
-.PHONY: build clean install import launch graph console docker_build docker_exec test dep
+.PHONY: build clean install import launch graph console docker_build docker_exec test dep camera_calibration

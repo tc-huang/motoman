@@ -9,6 +9,8 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
 from moveit_configs_utils import MoveItConfigsBuilder
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 
 def generate_launch_description():
@@ -151,6 +153,19 @@ def generate_launch_description():
     #     condition=IfCondition(db_config),
     # )
 
+    camera_pose = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+        get_package_share_directory('motoman_mh5_moveit_config'), 'launch'),
+        '/calibration_camera_pose.launch.py'])
+    )
+
+    # realsense = Node(
+    #     package="realsense2_camera",
+    #     executable="realsense2_camera_node",
+    #     arguments=[],
+    #     namespace="my_camera"
+    # )
+
     return LaunchDescription(
         [
             rviz_config_arg,
@@ -165,5 +180,7 @@ def generate_launch_description():
             panda_arm_controller_spawner,
             panda_hand_controller_spawner,
             # mongodb_server_node,
+            camera_pose,
+            # realsense
         ]
     )

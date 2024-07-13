@@ -43,7 +43,7 @@
         <joint name="joint_l" value="0"/>
         <joint name="joint_r" value="0"/>
         <joint name="joint_s" value="-1.5708"/>
-        <joint name="joint_t" value="3.1416"/>
+        <joint name="joint_t" value="0"/>
         <joint name="joint_u" value="0"/>
     </group_state>
     <group_state name="open" group="gripper">
