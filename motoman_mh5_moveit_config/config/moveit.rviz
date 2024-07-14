@@ -3,11 +3,9 @@ Panels:
     Help Height: 0
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /Camera Axes1
-        - /Gripper_base Axes1
+      Expanded: ~
       Splitter Ratio: 0.5
-    Tree Height: 258
+    Tree Height: 360
   - Class: rviz_common/Help
     Name: Help
   - Class: rviz_common/Views
@@ -316,29 +314,30 @@ Visualization Manager:
       Move Group Namespace: ""
       Name: HandEyeCalibration
       Planning Scene Topic: /monitored_planning_scene
-      Rx: 0
-      Ry: 0
-      Rz: 0
-      Tx: 0.0449
-      Ty: -0.0867
-      Tz: 0.1552
+      Rx: 3.1029
+      Ry: 3.1049
+      Rz: -0.1624
+      Tx: 0.0205
+      Ty: -0.0437
+      Tz: -0.04
       Value: true
       base: base_link
       eef: robotiq_85_base_link
       group: mh5_arm
-      image_topic: /handeye_calibration/target_detection
+      image_topic: /camera/camera/color/image_raw
+      longest board side (m): 0.197000
+      margin size (px): 2
       marker border (bits): 1
-      marker separation (px): 20
-      marker size (px): 200
-      markers, X: 3
-      markers, Y: 4
-      measured marker size (m): 0.030000
-      measured separation (m): 0.003000
+      marker size (px): 50
+      measured marker size (m): 0.028000
       object: handeye_target
       sensor: camera_color_optical_frame
       sensor_mount_type: 1
       solver: OpenCV/Tsai1989
-      target_type: HandEyeTarget/Aruco
+      square size (px): 80
+      squares, X: 5
+      squares, Y: 7
+      target_type: HandEyeTarget/Charuco
     - Class: rviz_default_plugins/Axes
       Enabled: true
       Length: 0.10000000149011612
@@ -352,6 +351,13 @@ Visualization Manager:
       Name: Gripper_base Axes
       Radius: 0.009999999776482582
       Reference Frame: robotiq_85_base_link
+      Value: true
+    - Class: rviz_default_plugins/Axes
+      Enabled: true
+      Length: 0.10000000149011612
+      Name: Target Axes
+      Radius: 0.009999999776482582
+      Reference Frame: handeye_target
       Value: true
   Enabled: true
   Global Options:
@@ -386,10 +392,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.014999964274466038
+      Pitch: 0.25979775190353394
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 4.710165977478027
+      Yaw: 4.720151424407959
     Saved: ~
 Window Geometry:
   Depth image:
@@ -407,7 +413,7 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000002b7000005aafc0200000007fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003f00fffffffb000000100044006900730070006c006100790073010000003b0000013d000000c700fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e0067010000017e000001b50000016900fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a005600690065007700730100000339000000c5000000a000fffffffb0000000c00430061006d0065007200610000000508000000dd0000000000000000fb0000002600480061006e0064004500790065002000430061006c006900620072006100740069006f006e0100000404000001e1000001e100ffffff00000001000001c3000005aafc0200000002fb0000001200520047004200200049006d006100670065010000003b000002520000002800fffffffb000000160044006500700074006800200069006d0061006700650100000293000003520000002800ffffff00000534000005aa00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000200000000000002b7000005aafc0200000007fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003f00fffffffb000000100044006900730070006c006100790073010000003b000001a3000000c700fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000001e4000001740000016900fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a00560069006500770073010000035e000000a0000000a000fffffffb0000000c00430061006d0065007200610000000508000000dd0000000000000000fb0000002600480061006e0064004500790065002000430061006c006900620072006100740069006f006e0100000404000001e1000001e100ffffff00000001000001c3000005aafc0200000002fb0000001200520047004200200049006d006100670065010000003b000002520000002800fffffffb000000160044006500700074006800200069006d0061006700650100000293000003520000002800ffffff00000534000005aa00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   RGB Image:
     collapsed: false
   Views:
