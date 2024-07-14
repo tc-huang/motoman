@@ -29,9 +29,25 @@ camera_calibration:
 #	108mm
 	ros2 run camera_calibration cameracalibrator --size 11x8 --square 0.02 image:=/camera/camera/color/image_raw camera:=/cmaera
 	cp /tmp/calibrationdata.tar.gz /motoman
+	mkdir calibration
+	tar -xzvf calibrationdata.tar.gz -C /motoman/calibration
 	
 camera_calibration_verify:
 	ros2 run camera_calibration cameracheck.py --size 11x8 monocular:=/forearm image:=image_rect
+
+image_proc:
+# 	https://docs.ros.org/en/rolling/p/image_proc/index.html
+# 	ros2 run image_proc image_proc --ros-args --remap namespace:=my_camera -r __ns:=/my_camera
+	ros2 run image_proc image_proc --ros-args -r __ns:=/camera/camera/color --remap namespace:=camera/camera/color
+#	https://github.com/IntelRealSense/realsense-ros/issues/855
+# 	ROS_NAMESPACE=camera/camera/color ros2 run image_proc image_proc
+
+camera_info:
+	# echo
+#	sensor_msgs/CameraInfo.msg
+# 	python3 yaml_to_dict.py --file /motoman/calibration/camera_info.yaml --output /motoman/calibration/camera_info.txt
+# 	ros2 topic pub /my_camera_info sensor_msgs/CameraInfo "$(cat /motoman/calibration/camera_info.txt)"
+	$(SETUP) && ros2 run camera_info camera_info_publisher --ros-args -r __ns:=/my_camera
 
 # import:
 # 	@echo "Import..."
@@ -62,6 +78,7 @@ dep:
 	@echo "Git clone..."
 	git clone https://github.com/tc-huang/ros2_robotiq_gripper.git
 	git clone https://github.com/RIF-Robotics/moveit2_calibration.git
+	git clone https://github.com/ros-industrial/industrial_reconstruction.git
 
 urdf:
 	@echo "URDF..."
@@ -111,6 +128,12 @@ docker_exec:
 	sudo docker exec -it ros2_humble_docker /bin/bash
 
 node_camera:
-	ros2 run realsense2_camera realsense2_camera_node
+	ros2 launch realsense2_camera rs_launch.py enable_rgbd:=true enable_sync:=true align_depth.enable:=true enable_color:=true enable_depth:=true pointcloud.enable:=true
+#  ros2 run realsense2_camera realsense2_camera_node
+#  --ros-args --remap align_depth:=true --remap pointcloud:=true --remap colorizer:=true 
+#  --ros-args -r /camera/camera/color/image_raw:=/camera/camera/color/image
+#	--ros-args -r /camera/camera/color/image_raw:=/my_camera/image
+camera_pose:
+	$(SETUP) &&  ros2 launch motoman_mh5_moveit_config calibration_camera_pose.launch.py
 
-.PHONY: build clean install import launch graph console docker_build docker_exec test dep camera_calibration
+.PHONY: build clean install import launch graph console docker_build docker_exec test dep camera_calibration image_proc camera_info camera_pose
