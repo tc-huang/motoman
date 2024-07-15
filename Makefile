@@ -8,6 +8,7 @@ PROJECT_ROOT := $(shell pwd)
 
 install:
 	@echo "Installing..."
+	pip install opencv-python
 	apt-get update && $(SETUP) && rosdep install --from-paths . -iry --skip-keys warehouse_ros_mongo && apt-get install -y ros-humble-image-pipeline
 # 	# sudo apt-get install -y gazebo libgazebo-dev
 # 	# sudo apt-get install -y ros-humble-octomap
@@ -140,5 +141,15 @@ node_camera:
 #	--ros-args -r /camera/camera/color/image_raw:=/my_camera/image
 camera_pose:
 	$(SETUP) &&  ros2 launch motoman_mh5_moveit_config calibration_camera_pose.launch.py
+
+reconstruct_launch:
+	$(SETUP) &&  ros2 launch industrial_reconstruction reconstruction.launch.xml depth_image_topic:=/camera/camera/aligned_depth_to_color/image_raw color_image_topic:=/camera/camera/color/image_raw camera_info_topic:=/camera/camera/color/camera_info
+
+reconstruct_start:
+	$(SETUP) &&  ros2 service call /start_reconstruction industrial_reconstruction_msgs/srv/StartReconstruction "$(shell cat reconstruct_start_config.txt)"
+
+reconstruct_stop:
+	ros2 service call /stop_reconstruction industrial_reconstruction_msgs/srv/StopReconstruction "$(shell cat reconstruct_stop_config.txt)"
+
 
 .PHONY: build clean install import launch graph console docker_build docker_exec test dep camera_calibration image_proc camera_info camera_pose
