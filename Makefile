@@ -8,8 +8,7 @@ PROJECT_ROOT := $(shell pwd)
 
 install:
 	@echo "Installing..."
-	apt-get update && rosdep install --from-paths . -iry --skip-keys warehouse_ros_mongo
-	apt-get update && apt-get install -y ros-humble-image-pipeline
+	apt-get update && $(SETUP) && rosdep install --from-paths . -iry --skip-keys warehouse_ros_mongo && apt-get install -y ros-humble-image-pipeline
 # 	# sudo apt-get install -y gazebo libgazebo-dev
 # 	# sudo apt-get install -y ros-humble-octomap
 # 	rosdep install --from-paths src -iry --skip-keys libvtk --skip-keys fcl --skip-keys taskflow
@@ -79,6 +78,12 @@ dep:
 	git clone https://github.com/tc-huang/ros2_robotiq_gripper.git
 	git clone https://github.com/RIF-Robotics/moveit2_calibration.git
 	git clone https://github.com/ros-industrial/industrial_reconstruction.git
+	git clone https://github.com/moveit/warehouse_ros_mongo.git -b ros2
+	git clone https://github.com/moveit/warehouse_ros_sqlite.git
+
+sql:
+	apt-get udpate && apt-get install sqlite3
+	sqlite3 my_database.db
 
 urdf:
 	@echo "URDF..."
@@ -110,7 +115,7 @@ build:
 demo:
 	@echo "Demo..."
 	# $(SETUP) &&  ros2 launch motoman_mh5_2f85_moveit_config demo.launch.py
-	$(SETUP) &&  ros2 launch motoman_mh5_moveit_config demo.launch.py
+	$(SETUP) &&  ros2 launch motoman_mh5_moveit_config demo.launch.py db:=true
 
 list_node:
 	@echo "List Node..."

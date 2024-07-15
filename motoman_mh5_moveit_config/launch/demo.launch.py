@@ -9,12 +9,16 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
 from moveit_configs_utils import MoveItConfigsBuilder
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 
 def generate_launch_description():
-
+        
+    warehouse_ros_config = {
+        "warehouse_plugin": "warehouse_ros_sqlite::DatabaseConnection",
+        "warehouse_host": "/motoman/my_database.sqlite",
+    }
     # Command-line arguments
     rviz_config_arg = DeclareLaunchArgument(
         "rviz_config",
@@ -22,9 +26,10 @@ def generate_launch_description():
         description="RViz configuration file",
     )
 
-    # db_arg = DeclareLaunchArgument(
-    #     "db", default_value="False", description="Database flag"
-    # )
+    db_arg = DeclareLaunchArgument(
+        "db", default_value="True", description="Database flag"
+        # "db", default_value="False", description="Database flag"
+    )
 
     # ros2_control_hardware_type = DeclareLaunchArgument(
     #     "ros2_control_hardware_type",
@@ -58,7 +63,7 @@ def generate_launch_description():
         package="moveit_ros_move_group",
         executable="move_group",
         output="screen",
-        parameters=[moveit_config.to_dict()],
+        parameters=[moveit_config.to_dict(), warehouse_ros_config],
         arguments=["--ros-args", "--log-level", "info"],
     )
 
@@ -79,6 +84,7 @@ def generate_launch_description():
             moveit_config.planning_pipelines,
             moveit_config.robot_description_kinematics,
             moveit_config.joint_limits,
+            warehouse_ros_config
         ],
     )
 
@@ -140,7 +146,7 @@ def generate_launch_description():
     )
 
     # Warehouse mongodb server
-    # db_config = LaunchConfiguration("db")
+    db_config = LaunchConfiguration("db")
     # mongodb_server_node = Node(
     #     package="warehouse_ros_mongo",
     #     executable="mongo_wrapper_ros.py",
@@ -153,11 +159,42 @@ def generate_launch_description():
     #     condition=IfCondition(db_config),
     # )
 
-    camera_pose = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-        get_package_share_directory('motoman_mh5_moveit_config'), 'launch'),
-        '/calibration_camera_pose.launch.py'])
+    camera_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(
+                get_package_share_directory('realsense2_camera'),
+                'launch',
+                'rs_launch.py'
+            )
+        ]),
+        launch_arguments={
+            'enable_rgbd': 'true',
+            'enable_sync': 'true',
+            'align_depth.enable': 'true',
+            'enable_color': 'true',
+            'enable_depth': 'true',
+            'pointcloud.enable': 'true'
+        }.items(),
     )
+
+    delayed_camera_launch = TimerAction(
+        period=5.0,
+        actions=[camera_launch]
+    )
+
+
+    camera_pose_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(
+        get_package_share_directory('motoman_mh5_moveit_config'), 'launch',
+        'calibration_camera_pose.launch.py')
+        )
+    )
+    delayed_camera_pose_launch = TimerAction(
+        period=10.0,
+        actions=[camera_pose_launch]
+    )
+
+
 
     # realsense = Node(
     #     package="realsense2_camera",
@@ -169,7 +206,7 @@ def generate_launch_description():
     return LaunchDescription(
         [
             rviz_config_arg,
-            # db_arg,
+            db_arg,
             # ros2_control_hardware_type,
             rviz_node,
             static_tf_node,
@@ -180,7 +217,9 @@ def generate_launch_description():
             panda_arm_controller_spawner,
             panda_hand_controller_spawner,
             # mongodb_server_node,
-            camera_pose,
+            # camera_pose,
+            delayed_camera_launch,
+            delayed_camera_pose_launch
             # realsense
         ]
     )
