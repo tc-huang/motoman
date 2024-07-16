@@ -71,6 +71,7 @@ namespace motoman_mh5_driver
         // Store the command for the simulated robot
         std::vector<double> hw_commands_;
         std::vector<double> hw_states_;
+        bool action = false;
     };
 } // namespace motoman_mh5_driver
 

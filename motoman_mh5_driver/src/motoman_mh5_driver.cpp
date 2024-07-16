@@ -24,6 +24,7 @@ namespace motoman_mh5_driver
 
         hw_states_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
         hw_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
+        action = false;
 
         // for (const hardware_interface::ComponentInfo & joint : info_.joints)
         // {
@@ -107,22 +108,27 @@ namespace motoman_mh5_driver
     // }
 
     hardware_interface::return_type MotomanMH5Driver::read(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/){
-        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "read");
-        command.read_joint();
-        for(int i = 0; i < 6; i++){
-            hw_states_[i] = command.radians[i];
+        if(true)
+        {
+            RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "read");
+            command.read_joint();
+            for(int i = 0; i < 6; i++){
+                hw_states_[i] = command.radians[i];
+            }
         }
         return hardware_interface::return_type::OK;
     }
 
     hardware_interface::return_type MotomanMH5Driver::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/){
-        // RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "write");
         for(int i = 0; i < 6; i++){
-            if (abs(hw_commands_[i] - hw_states_[i]) >= 0.0001)
+            if (abs(hw_commands_[i] - hw_states_[i]) >= 0.02)// && action == false)
             {
+                RCLCPP_INFO(rclcpp::get_logger("MotomanMH5Driver"), "write");
                 command.write_joint(hw_commands_[0], hw_commands_[1], hw_commands_[2], hw_commands_[3], hw_commands_[4], hw_commands_[5], SPEED);
+                // action = true;
                 break;
             }
+            // else action = false;
         }
         return hardware_interface::return_type::OK;
     }
