@@ -1,24 +1,11 @@
 ros2 service call /start_reconstruction industrial_reconstruction_msgs/srv/StartReconstruction "tracking_frame: 'camera_color_optical_frame'
 relative_frame: 'world'
-translation_distance: 0.0
-rotational_distance: 0.0
+translation_distance: 0.1
+rotational_distance: 0.1
 live: true
 tsdf_params:
-  voxel_length: 0.02
-  sdf_trunc: 0.04
-  min_box_values: {x: 0.05, y: 0.25, z: 0.1}
-  max_box_values: {x: 7.0, y: 3.0, z: 1.2}
-rgbd_params: {depth_scale: 1000.0, depth_trunc: 0.75, convert_rgb_to_intensity: false}"
-
-
-ros2 service call /start_reconstruction industrial_reconstruction_msgs/srv/StartReconstruction "tracking_frame: 'camera_color_optical_frame'
-relative_frame: 'world'
-translation_distance: 0.0
-rotational_distance: 0.0
-live: false
-tsdf_params:
-  voxel_length: 0.1
-  sdf_trunc: 0.04
-  min_box_values: {x: 0.05, y: 0.25, z: 0.1}
-  max_box_values: {x: 7.0, y: 3.0, z: 1.2}
-rgbd_params: {depth_scale: 1000.0, depth_trunc: 0.75, convert_rgb_to_intensity: false}"
+  voxel_length: 0.002
+  sdf_trunc: 0.1
+  min_box_values: {x: 0, y: 0, z: 0.}
+  max_box_values: {x: 0, y: 0, z: 0}
+rgbd_params: {depth_scale: 1000.0, depth_trunc: 0.7, convert_rgb_to_intensity: false}"
