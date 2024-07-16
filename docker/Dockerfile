@@ -25,6 +25,8 @@ RUN rosdep install --from-paths . -iry --skip-keys warehouse_ros_mongo
 RUN apt update && apt install -y ros-humble-librealsense2* ros-humble-realsense2-*
 
 WORKDIR /motoman
+ENV ROS_DOMAIN_ID=7
+ENV USER=root
 
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 
