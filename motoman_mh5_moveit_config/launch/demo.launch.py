@@ -168,14 +168,23 @@ def generate_launch_description():
             )
         ]),
         launch_arguments={
-            'enable_rgbd': 'true',
+            # 'enable_rgbd': 'true',
             'enable_sync': 'true',
             'align_depth.enable': 'true',
             'enable_color': 'true',
-            'enable_depth': 'true',
-            'pointcloud.enable': 'true'
+            # 'enable_depth': 'true',
+            'rgb_camera.color_profile': '640x480x30',
+            'temporal_filter.enable':'true',
+            'hole_filling_filter.enable':'true',
         }.items(),
     )
+
+    # disparity_filter - convert depth to disparity before applying other filters and back.
+    # spatial_filter - filter the depth image spatially.
+    # temporal_filter - filter the depth image temporally.
+    # hole_filling_filter - apply hole-filling filter.
+    # decimation_filter - reduces depth scene complexity.
+
 
     delayed_camera_launch = TimerAction(
         period=5.0,
