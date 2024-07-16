@@ -8,7 +8,7 @@ PROJECT_ROOT := $(shell pwd)
 
 install:
 	@echo "Installing..."
-	pip install opencv-python
+	pip install numpy==1.26.4 opencv-python
 	apt-get update && $(SETUP) && rosdep install --from-paths . -iry --skip-keys warehouse_ros_mongo && apt-get install -y ros-humble-image-pipeline
 # 	# sudo apt-get install -y gazebo libgazebo-dev
 # 	# sudo apt-get install -y ros-humble-octomap
