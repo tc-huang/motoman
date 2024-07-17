@@ -149,7 +149,9 @@ reconstruct_start:
 	$(SETUP) &&  ros2 service call /start_reconstruction industrial_reconstruction_msgs/srv/StartReconstruction "$(shell cat reconstruct_start_config.txt)"
 
 reconstruct_stop:
-	ros2 service call /stop_reconstruction industrial_reconstruction_msgs/srv/StopReconstruction "$(shell cat reconstruct_stop_config.txt)"
+	$(SETUP) && ros2 service call /stop_reconstruction industrial_reconstruction_msgs/srv/StopReconstruction "$(shell cat reconstruct_stop_config.txt)"
 
+reconstruct_plan:
+	$(SETUP) && ros2 run reconstruct_plan reconstruct_plan
 
-.PHONY: build clean install import launch graph console docker_build docker_exec test dep camera_calibration image_proc camera_info camera_pose
+.PHONY: build clean install import launch graph console docker_build docker_exec test dep camera_calibration image_proc camera_info camera_pose reconstruct_plan
