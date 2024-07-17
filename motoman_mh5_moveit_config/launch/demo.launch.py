@@ -14,6 +14,9 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 
 def generate_launch_description():
+    # kinematics_yaml = load_yaml(
+    #     "motoman_mh5_moveit_config", "config/kinematics.yaml"
+    # )
         
     warehouse_ros_config = {
         "warehouse_plugin": "warehouse_ros_sqlite::DatabaseConnection",
@@ -48,13 +51,14 @@ def generate_launch_description():
             # },
         )
         .robot_description_semantic(file_path="config/motoman_mh5.srdf")
-        # .planning_scene_monitor(
-        #     publish_robot_description=True, publish_robot_description_semantic=True
-        # )
+        .planning_scene_monitor(
+            publish_robot_description=True, publish_robot_description_semantic=True
+        )
         # .trajectory_execution(file_path="config/ros2_controllers.yaml")
         # .planning_pipelines(
         #     pipelines=["ompl", "chomp", "pilz_industrial_motion_planner"]#, "stomp"]
         # )
+        .robot_description_kinematics()
         .to_moveit_configs()
     )
 
@@ -84,7 +88,7 @@ def generate_launch_description():
             moveit_config.planning_pipelines,
             moveit_config.robot_description_kinematics,
             moveit_config.joint_limits,
-            warehouse_ros_config
+            warehouse_ros_config,
         ],
     )
 
