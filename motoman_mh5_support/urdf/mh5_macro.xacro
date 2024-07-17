@@ -10,7 +10,7 @@
 				<geometry>
 					<mesh filename="package://motoman_mh5_support/meshes/mh5/visual/MH5_BASE_AXIS.stl" />
 				</geometry>
-				<xacro:material_yaskawa_blue/>
+				<xacro:material_yaskawa_white/>
 			</visual>
 			<collision>
 			        <origin rpy="0 0 3.14159"/>
@@ -40,7 +40,7 @@
 				<geometry>
 					<mesh filename="package://motoman_mh5_support/meshes/mh5/visual/MH5_L_AXIS.stl"/>
 				</geometry>
-				<xacro:material_yaskawa_blue/>
+				<xacro:material_yaskawa_white/>
 			</visual>
 			<collision>
 				<!-- <origin rpy="1.57 3.1416 0" xyz="0 0 0"/> -->
@@ -56,7 +56,7 @@
 				<geometry>
 					<mesh filename="package://motoman_mh5_support/meshes/mh5/visual/MH5_U_AXIS.stl"/>
 				</geometry>
-				<xacro:material_yaskawa_blue/>
+				<xacro:material_yaskawa_white/>
 			</visual>
 			<collision>
 				<!-- <origin rpy="1.57 -3.1415 0" xyz="0 0 0"/> -->
@@ -88,7 +88,7 @@
 				<geometry>
 					<mesh filename="package://motoman_mh5_support/meshes/mh5/visual/MH5_B_AXIS.stl"/>
 				</geometry>
-				<xacro:material_yaskawa_blue/>
+				<xacro:material_yaskawa_white/>
 			</visual>
 			<collision>
 				<!-- <origin rpy="-1.57 0 3.1416" xyz="0 0 0"/> -->
