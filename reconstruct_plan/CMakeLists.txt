@@ -9,6 +9,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(industrial_reconstruction_msgs REQUIRED)
+
 
 add_executable(reconstruct_plan src/reconstruct_plan.cpp)
 target_include_directories(reconstruct_plan PUBLIC
@@ -19,6 +21,7 @@ ament_target_dependencies(
   reconstruct_plan
   "moveit_ros_planning_interface"
   "rclcpp"
+  "industrial_reconstruction_msgs"
 )
 
 install(TARGETS reconstruct_plan

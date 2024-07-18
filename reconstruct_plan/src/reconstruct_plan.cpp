@@ -5,7 +5,12 @@
 #include <memory>
 
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp/executor.hpp>
+
 #include <moveit/move_group_interface/move_group_interface.h>
+#include <industrial_reconstruction_msgs/srv/start_reconstruction.hpp>
+#include <industrial_reconstruction_msgs/srv/stop_reconstruction.hpp>
+#include <industrial_reconstruction_msgs/srv/flag.hpp>
 
 int main(int argc, char* argv[])
 {
@@ -20,21 +25,69 @@ int main(int argc, char* argv[])
   // Create the MoveIt MoveGroup Interface
   using moveit::planning_interface::MoveGroupInterface;
   auto move_group_interface = MoveGroupInterface(node, "mh5_arm");
-  // move_group_interface.allowReplanning(true);
-  // move_group_interface.setNumPlanningAttempts(10);
+  
+  // Create a client to call the /start_reconstruction service
+  auto client = node->create_client<industrial_reconstruction_msgs::srv::StartReconstruction>("/start_reconstruction");
 
+  // Wait for the service to be available
+  while (!client->wait_for_service(std::chrono::seconds(1))) {
+    if (!rclcpp::ok()) {
+      RCLCPP_ERROR(logger, "Interrupted while waiting for the service. Exiting.");
+      return 1;
+    }
+    RCLCPP_INFO(logger, "Service not available, waiting again...");
+  }
 
+  auto client_stop = node->create_client<industrial_reconstruction_msgs::srv::StopReconstruction>("/stop_reconstruction");
+  // Wait for the service to be available
+  while (!client_stop->wait_for_service(std::chrono::seconds(1))) {
+    if (!rclcpp::ok()) {
+      RCLCPP_ERROR(logger, "Interrupted while waiting for the service. Exiting.");
+      return 1;
+    }
+    RCLCPP_INFO(logger, "Service not available, waiting again...");
+  }
 
-  // Set a target Pose
-  // auto const target_pose = [] {
-  //   geometry_msgs::msg::Pose msg;
-  //   msg.orientation.w = 1.0;
-  //   msg.position.x = 0.28;
-  //   msg.position.y = -0.2;
-  //   msg.position.z = 0.5;
-  //   return msg;
-  // }();
-  // move_group_interface.setPoseTarget(target_pose);
+  auto client_flag = node->create_client<industrial_reconstruction_msgs::srv::Flag>("/flag");
+  // Wait for the service to be available
+  while (!client_flag->wait_for_service(std::chrono::seconds(1))) {
+    if (!rclcpp::ok()) {
+      RCLCPP_ERROR(logger, "Interrupted while waiting for the service. Exiting.");
+      return 1;
+    }
+    RCLCPP_INFO(logger, "Service not available, waiting again...");
+  }
+
+  // Create a request
+  auto request = std::make_shared<industrial_reconstruction_msgs::srv::StartReconstruction::Request>();
+  request->tracking_frame = "camera_color_optical_frame";
+  request->relative_frame = "world";
+  request->translation_distance = 0.1;
+  request->rotational_distance = 0.1;
+  request->live = true;
+  request->tsdf_params.voxel_length = 0.002;
+  request->tsdf_params.sdf_trunc = 0.1;
+  request->tsdf_params.min_box_values.x = 0;
+  request->tsdf_params.min_box_values.y = 0;
+  request->tsdf_params.min_box_values.z = 0;
+  request->tsdf_params.max_box_values.x = 0;
+  request->tsdf_params.max_box_values.y = 0;
+  request->tsdf_params.max_box_values.z = 0;
+  request->rgbd_params.depth_scale = 1000.0;
+  request->rgbd_params.depth_trunc = 0.7;
+  request->rgbd_params.convert_rgb_to_intensity = false;
+
+    // Call the service and wait for the response
+  auto future = client->async_send_request(request);
+
+  if (rclcpp::spin_until_future_complete(node, future) ==
+      rclcpp::FutureReturnCode::SUCCESS)
+  {
+    RCLCPP_INFO(logger, "Reconstruction started successfully");
+  } else {
+    RCLCPP_ERROR(logger, "Failed to start reconstruction");
+  }
+  
 
   std::vector<std::vector<double>> scan_poses_joint_values = {
     {-34.0, 3.0, 31.0, 34.0, -115.0, 142.0},  //left_1
@@ -54,14 +107,6 @@ int main(int argc, char* argv[])
     }
     move_group_interface.setStartStateToCurrentState();
     move_group_interface.setJointValueTarget(scan_poses_joint_values[i]);
-    // move_group_interface.setMaxVelocityScalingFactor(0.0001);
-
-
-    // const moveit::core::JointModelGroup* joint_model_group = move_group_interface.getCurrentState()->getJointModelGroup("mh5_arm");
-    // moveit::core::RobotStatePtr current_state = move_group_interface.getCurrentState();
-
-    // move_group_interface.setMaxVelocityScalingFactor(0.05);
-    // move_group_interface.setMaxAccelerationScalingFactor(0.05);
 
     // Create a plan to that target pose
     auto const[success, plan] = [&move_group_interface] {
@@ -77,12 +122,52 @@ int main(int argc, char* argv[])
       move_group_interface.execute(plan);
       RCLCPP_INFO(logger, "Planning %d End!", i);
       // Sleep for 0.5 second
-      rclcpp::sleep_for(std::chrono::seconds(0.5));
+      rclcpp::sleep_for(std::chrono::seconds(2));
+      // Create a request
+      auto request_flag = std::make_shared<industrial_reconstruction_msgs::srv::Flag::Request>();
+      request_flag->flag = true;
+
+      // Call the service and wait for the response
+      auto future_flag = client_flag->async_send_request(request_flag);
+
+      if (rclcpp::spin_until_future_complete(node, future_flag) == rclcpp::FutureReturnCode::SUCCESS){
+        RCLCPP_INFO(logger, "Reconstruction started successfully");
+      } else {
+        RCLCPP_ERROR(logger, "Failed to start reconstruction");
+      }
     }
     else
     {
       RCLCPP_ERROR(logger, "Planning failed!");
     }
+  }
+
+  
+  // Create a request
+  auto request_stop = std::make_shared<industrial_reconstruction_msgs::srv::StopReconstruction::Request>();
+  request_stop->archive_directory = "/motoman/industrial_reconstruction_archive/archive";
+  request_stop->mesh_filepath = "/motoman/industrial_reconstruction_archive/results_mesh.ply";
+  
+  // Add normal filters
+  industrial_reconstruction_msgs::msg::NormalFilterParams normal_filter;
+  normal_filter.normal_direction.x = 0.0;
+  normal_filter.normal_direction.y = 0.0;
+  normal_filter.normal_direction.z = 1.0;
+  normal_filter.angle = 90.0;
+  request_stop->normal_filters.push_back(normal_filter);
+
+  request_stop->min_num_faces = 1000;
+
+  // Call the service and wait for the response
+  auto future_stop = client_stop->async_send_request(request_stop);
+
+  // Wait for the response
+  if (rclcpp::spin_until_future_complete(node, future_stop) ==
+    rclcpp::FutureReturnCode::SUCCESS)
+  {
+    RCLCPP_INFO(node->get_logger(), "Service call succeeded");
+  } else {
+    RCLCPP_ERROR(node->get_logger(), "Failed to call service");
   }
 
   // Shutdown ROS
