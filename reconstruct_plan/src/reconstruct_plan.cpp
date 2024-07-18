@@ -38,9 +38,9 @@ int main(int argc, char* argv[])
 
   std::vector<std::vector<double>> scan_poses_joint_values = {
     {-34.0, 3.0, 31.0, 34.0, -115.0, 142.0},  //left_1
-    {-92.0, -36.0, 16.0, -1.0, -114.0, 181.0},  //front_1
+    // {-92.0, -36.0, 16.0, -1.0, -114.0, 181.0},  //front_1
     {-91.0, -28.0, 23.0, -1.0, -112.0, 181.0},  // top_1
-    {-90.0, 19.0, 57.0, 0.0, 125.0, 185.0}, //back_1
+    // {-90.0, 19.0, 57.0, 0.0, 125.0, 185.0}, //back_1
     {-139.0, -8.0, 33.0, -30.0, -115.0, 214.0}, //right_1
     // {-34.0, 3.0, 31.0, 34.0, -115.0, 142.0},
     // {-34.0, 3.0, 31.0, 34.0, -115.0, 142.0},
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
     for (int j = 0; j < scan_poses_joint_values[i].size(); j++) {
         scan_poses_joint_values[i][j] *= M_PI / 180.0;
     }
-    // move_group_interface.setStartStateToCurrentState();
+    move_group_interface.setStartStateToCurrentState();
     move_group_interface.setJointValueTarget(scan_poses_joint_values[i]);
     // move_group_interface.setMaxVelocityScalingFactor(0.0001);
 
@@ -73,7 +73,11 @@ int main(int argc, char* argv[])
     // Execute the plan
     if (success)
     {
+      RCLCPP_INFO(logger, "Planning %d start!", i);
       move_group_interface.execute(plan);
+      RCLCPP_INFO(logger, "Planning %d End!", i);
+      // Sleep for 0.5 second
+      rclcpp::sleep_for(std::chrono::seconds(0.5));
     }
     else
     {

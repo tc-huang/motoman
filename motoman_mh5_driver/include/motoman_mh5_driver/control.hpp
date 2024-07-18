@@ -27,7 +27,7 @@
 #define PULSE_PER_DEGREE_B  910.2230627
 #define PULSE_PER_DEGREE_T  568.8894315 //-568.8894315
 
-#define SPEED 200
+#define SPEED 500
 
 namespace control
 {
