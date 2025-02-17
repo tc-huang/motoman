@@ -74,14 +74,14 @@
         <geometry>
           <mesh filename="package://motoman_hc20_support/meshes/hc20dtp/visual/link_5_b.dae"/>
         </geometry>
-		<origin rpy="0 1.57075 0"/>
+        <origin rpy="0 1.57075 0"/>
         <xacro:material_yaskawa_white/>
       </visual>
       <collision>
         <geometry>
           <mesh filename="package://motoman_hc20_support/meshes/hc20dtp/collision/link_5_b.stl"/>
         </geometry>
-		<origin rpy="0 1.57075 0"/>
+        <origin rpy="0 1.57075 0"/>
       </collision>
     </link>
     <link name="${prefix}link_6_t">
@@ -89,14 +89,14 @@
         <geometry>
           <mesh filename="package://motoman_hc20_support/meshes/hc20dtp/visual/link_6_t.dae"/>
         </geometry>
-		<origin rpy="0 1.57075 0"/>
+        <origin rpy="0 1.57075 0"/>
         <xacro:material_yaskawa_white/>
       </visual>
       <collision>
         <geometry>
           <mesh filename="package://motoman_hc20_support/meshes/hc20dtp/collision/link_6_t.stl"/>
         </geometry>
-		<origin rpy="0 1.57075 0"/>
+        <origin rpy="0 1.57075 0"/>
       </collision>
     </link>
     <link name="${prefix}tool0"/>
