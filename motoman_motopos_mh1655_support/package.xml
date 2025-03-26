@@ -18,7 +18,11 @@
       <li>MotoPos MH1655 - Default</li>
     </ul>
     <p>
-      Specifications can be found online at https://www.motoman.com/en-us/products/peripherals/positioners/headstock-tailstock.
+      Joint limits and maximum joint velocities are based on the information
+      found in <em>YASKAWA MH(T)-SERIES SIGMA-5 POSITIONER MANUAL</em> version
+      <em>168961-1CD</em>.
+      All urdfs are based on the default motion and joint velocity limits,
+      unless noted otherwise.
     </p>
     <p>
       Before using any of the configuration files and / or meshes included
