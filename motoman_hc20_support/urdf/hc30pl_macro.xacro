@@ -128,6 +128,7 @@
       <child link="${prefix}link_4_r"/>
       <origin xyz="0.880 0 0" rpy="0 0 0" />
       <axis xyz="-1 0 0" />
+      <!-- see note in package.xml regarding joint position limits -->
       <limit lower="${radians(-210)}" upper="${radians(210)}" effort="368.48" velocity="${radians(130)}"/>
     </joint>
     <joint name="${prefix}joint_5_b" type="revolute">
@@ -135,6 +136,7 @@
       <child link="${prefix}link_5_b"/>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <axis xyz="0 -1 0" />
+      <!-- see note in package.xml regarding joint position limits -->
       <limit lower="${radians(-90)}" upper="${radians(270)}" effort="141.12" velocity="${radians(180)}"/>
     </joint>
     <joint name="${prefix}joint_6_t" type="revolute">

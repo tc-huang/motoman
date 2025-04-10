@@ -34,11 +34,15 @@
       unless noted otherwise.
     </p>
     <p>
-      NOTE: The HC30PL is the palletizing variant of the HC20 where the 
-      wrist must always point toward the ground +/-15 degrees, which allows 
-      a greater payload of 30 kg. There is no way of building this constraint
-      in the urdf model. Therefore, this constraint will need to be handled 
-      explicitly by the motion planner.
+      NOTE: the HC30PL is the palletizing variant of the HC20 where the wrist
+      joints ('joint_4_r' and 'joint_5_b') are limited to +/-15 degrees with
+      respect to the ground plane normal.
+      Unfortunately, this limitation can't be modelled using URDF joint limits,
+      and must therefore be handled by the motion planner or other process
+      planning trajectories.
+      Failure to take this constraint into account will cause the Yaskawa robot
+      controller to abort trajectory execution and to raise alarms on the Teach
+      Pendant.
     </p>
     <p>
       Before using any of the configuration files and / or meshes included
