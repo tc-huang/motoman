@@ -7,7 +7,7 @@
   <author>Jon Meyer</author>
   <maintainer email="shaun.edwards@gmail.com">Shaun Edwards</maintainer>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn (TU Delft Robotics Institute)</maintainer>
-  <license>Apache 2.0</license>
+  <license>Apache-2.0</license>
 
   <url type="website">http://wiki.ros.org/motoman_mh12_support</url>
   <url type="bugtracker">https://github.com/ros-industrial/motoman/issues</url>

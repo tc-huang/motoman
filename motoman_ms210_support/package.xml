@@ -27,7 +27,7 @@
   </description>
   <author>Adam Buynak</author>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn (TU Delft Robotics Institute)</maintainer>
-  <license>BSD</license>
+  <license>BSD-3-Clause</license>
 
   <url type="website">http://wiki.ros.org/motoman_ms210_support</url>
   <url type="bugtracker">https://github.com/ros-industrial/motoman/issues</url>
