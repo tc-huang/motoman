@@ -36,7 +36,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>roslaunch</depend>
+  <test_depend>roslaunch</test_depend>
 
   <exec_depend>industrial_robot_client</exec_depend>
   <exec_depend>joint_state_publisher_gui</exec_depend>
