@@ -14,10 +14,10 @@ add_message_files(
     msg
   FILES
     DynamicJointPoint.msg
-    DynamicJointsGroup.msg
     DynamicJointState.msg
     DynamicJointTrajectory.msg
     DynamicJointTrajectoryFeedback.msg
+    DynamicJointsGroup.msg
 )
 
 add_service_files(
@@ -25,13 +25,13 @@ add_service_files(
     srv
   FILES
     CmdJointTrajectoryEx.srv
+    ReadGroupIO.srv
     ReadMRegister.srv
     ReadSingleIO.srv
-    ReadGroupIO.srv
     SelectTool.srv
+    WriteGroupIO.srv
     WriteMRegister.srv
     WriteSingleIO.srv
-    WriteGroupIO.srv
 )
 
 generate_messages(
