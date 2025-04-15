@@ -39,6 +39,8 @@ include_directories(
 add_definitions(-DLINUXSOCKETS=1)  #use linux sockets for communication
 add_definitions(-DROS=1)
 
+# probably needed for swap vs no-swap libraries (ros-industrial/motoman#207)
+#catkin_lint: ignore missing_export_lib
 catkin_package(
   CATKIN_DEPENDS
     actionlib
@@ -55,6 +57,7 @@ catkin_package(
     std_srvs
     trajectory_msgs
     urdf
+  # TODO(gavanderhoorn): check whether this can be removed
   INCLUDE_DIRS
     include
 )
