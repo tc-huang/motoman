@@ -38,6 +38,7 @@
 
   <depend>roslaunch</depend>
 
+  <exec_depend>industrial_robot_client</exec_depend>
   <exec_depend>joint_state_publisher_gui</exec_depend>
   <exec_depend>motoman_driver</exec_depend>
   <exec_depend>motoman_resources</exec_depend>
