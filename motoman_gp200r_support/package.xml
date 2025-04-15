@@ -30,8 +30,8 @@
     </p>
   </description>
   <author>Dylan Rolleigh</author>
-  <maintainer email="drolleigh@bastiansolutions.com">Dylan Rolleigh (Bastian Solutions)</maintainer>
-  <maintainer email="ajinandra@bastiansolutions.com">Akash Jinandra (Bastian Solutions)</maintainer>
+  <author>Akash Jinandra (Bastian Solutions)</author>
+  <maintainer email="techsupport@motoman.com">Eric Marcil</maintainer>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn (TU Delft Robotics Institute)</maintainer>
   <license>BSD-3-Clause</license>
 

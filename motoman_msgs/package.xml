@@ -5,7 +5,7 @@
   <version>0.3.5</version>
   <description>Messages for the multi-group interface of motoman_driver.</description>
   <author>Thiago de Freitas</author>
-  <maintainer email="shaun.edwards@gmail.com">Shaun Edwards</maintainer>
+  <author>Shaun Edwards</author>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn (TU Delft Robotics Institute)</maintainer>
   <license>BSD-3-Clause</license>
 

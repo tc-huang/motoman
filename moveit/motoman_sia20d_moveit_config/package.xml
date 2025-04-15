@@ -10,7 +10,8 @@
     </p>
   </description>
   <author>MoveIt Setup Assistant</author>
-  <maintainer email="shaun.edwards@gmail.com">Shaun Edwards</maintainer>
+  <author>Shaun Edwards</author>
+  <maintainer email="techsupport@motoman.com">Eric Marcil</maintainer>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn (TU Delft Robotics Institute)</maintainer>
   <license>BSD-3-Clause</license>
 

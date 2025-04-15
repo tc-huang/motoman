@@ -26,6 +26,7 @@
     </p>
   </description>
   <author>Michael Ripperger</author>
+  <maintainer email="techsupport@motoman.com">Eric Marcil</maintainer>
   <maintainer email="michael.ripperger@swri.org">Michael Ripperger</maintainer>
   <license>Apache-2.0</license>
 

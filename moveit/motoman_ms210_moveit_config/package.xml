@@ -9,7 +9,9 @@
       An automatically generated package with all the configuration and launch files for using the Motoman MS210 with the MoveIt Motion Planning Framework.
     </p>
   </description>
+  <author>MoveIt Setup Assistant</author>
   <author>Adam Buynak</author>
+  <maintainer email="techsupport@motoman.com">Eric Marcil</maintainer>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn (TU Delft Robotics Institute)</maintainer>
   <license>BSD-3-Clause</license>
 
