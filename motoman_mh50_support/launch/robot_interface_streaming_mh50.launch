@@ -9,14 +9,14 @@
     robot_interface_streaming_mh50.launch robot_ip:=<value> controller:=<dx200>
 -->
 <launch>
-	<arg name="robot_ip" />
-	
+  <arg name="robot_ip" />
+  
   <!-- controller: Controller name (dx200) -->
   <arg name="controller"/>
 
-        <rosparam command="load" file="$(find motoman_mh50_support)/config/joint_names_mh50.yaml" />
+  <rosparam command="load" file="$(find motoman_mh50_support)/config/joint_names_mh50.yaml" />
 
-	<include file="$(find motoman_driver)/launch/robot_interface_streaming_$(arg controller).launch">
-		<arg name="robot_ip"   value="$(arg robot_ip)" />
-	</include>
+  <include file="$(find motoman_driver)/launch/robot_interface_streaming_$(arg controller).launch">
+    <arg name="robot_ip"   value="$(arg robot_ip)" />
+  </include>
 </launch>
