@@ -20,6 +20,8 @@ jobs:
         ros_repo: [ main, testing ]
 
     env:
+      CATKIN_LINT: true
+      CATKIN_LINT_ARGS: --skip-path "motoman/moveit/motoman"
       CCACHE_DIR: "${{ github.workspace }}/.ccache"
 
     steps:

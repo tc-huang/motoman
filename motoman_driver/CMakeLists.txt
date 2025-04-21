@@ -39,6 +39,8 @@ include_directories(
 add_definitions(-DLINUXSOCKETS=1)  #use linux sockets for communication
 add_definitions(-DROS=1)
 
+# probably needed for swap vs no-swap libraries (ros-industrial/motoman#207)
+#catkin_lint: ignore missing_export_lib
 catkin_package(
   CATKIN_DEPENDS
     actionlib
@@ -55,6 +57,7 @@ catkin_package(
     std_srvs
     trajectory_msgs
     urdf
+  # TODO(gavanderhoorn): check whether this can be removed
   INCLUDE_DIRS
     include
 )
@@ -116,6 +119,7 @@ set(CLIENT_SRC_FILES
 # dx100 uses same byte-ordering as most i386-based PCs
 
 # Simple message library
+#catkin_lint: ignore_once unsorted_list
 add_library(motoman_simple_message ${MSG_SRC_FILES})
 target_link_libraries(motoman_simple_message
   simple_message)
@@ -141,10 +145,10 @@ set_target_properties(motoman_robot_state
 
 # Motion streaming node
 add_executable(motoman_motion_streaming_interface
+  src/io_ctrl.cpp
   src/joint_streaming_node.cpp
   src/joint_trajectory_streamer.cpp
-  src/motion_ctrl.cpp
-  src/io_ctrl.cpp)
+  src/motion_ctrl.cpp)
 target_link_libraries(motoman_motion_streaming_interface
   motoman_simple_message
   motoman_industrial_robot_client
@@ -155,9 +159,9 @@ set_target_properties(motoman_motion_streaming_interface
 
 # I/O relay node
 add_executable(motoman_io_relay
-  src/io_relay_node.cpp
+  src/io_ctrl.cpp
   src/io_relay.cpp
-  src/io_ctrl.cpp)
+  src/io_relay_node.cpp)
 target_link_libraries(motoman_io_relay
   motoman_simple_message
   motoman_industrial_robot_client
@@ -170,6 +174,7 @@ set_target_properties(motoman_io_relay
 #----------------------------------------------------------------
 # FS100 uses opposite byte-ordering from most i386-based PCs
 # Simple message library
+#catkin_lint: ignore_once unsorted_list
 add_library(motoman_simple_message_bswap ${MSG_SRC_FILES})
 set_target_properties(motoman_simple_message_bswap PROPERTIES COMPILE_DEFINITIONS "BYTE_SWAPPING")
 target_link_libraries(motoman_simple_message_bswap
@@ -197,10 +202,10 @@ set_target_properties(motoman_robot_state_bswap
 
 # Motion streaming node
 add_executable(motoman_motion_streaming_interface_bswap
+  src/io_ctrl.cpp
   src/joint_streaming_node.cpp
   src/joint_trajectory_streamer.cpp
-  src/motion_ctrl.cpp
-  src/io_ctrl.cpp)
+  src/motion_ctrl.cpp)
 target_link_libraries(motoman_motion_streaming_interface_bswap
   motoman_simple_message_bswap
   motoman_industrial_robot_client_bswap
@@ -211,9 +216,9 @@ set_target_properties(motoman_motion_streaming_interface_bswap
 
 # I/O relay node
 add_executable(motoman_io_relay_bswap
-  src/io_relay_node.cpp
+  src/io_ctrl.cpp
   src/io_relay.cpp
-  src/io_ctrl.cpp)
+  src/io_relay_node.cpp)
 target_link_libraries(motoman_io_relay_bswap
   motoman_simple_message_bswap
   motoman_industrial_robot_client_bswap
@@ -267,8 +272,8 @@ install(DIRECTORY include/${PROJECT_NAME}/
 # other files
 install(DIRECTORY
     Inform
-    launch
     MotoPlus
+    launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 

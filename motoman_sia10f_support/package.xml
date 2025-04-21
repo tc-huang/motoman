@@ -29,9 +29,10 @@
     </p>
   </description>
   <author>Thiago de Freitas</author>
-  <maintainer email="shaun.edwards@gmail.com">Shaun Edwards</maintainer>
+  <author>Shaun Edwards</author>
+  <maintainer email="techsupport@motoman.com">Eric Marcil</maintainer>
   <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn (TU Delft Robotics Institute)</maintainer>
-  <license>BSD</license>
+  <license>BSD-3-Clause</license>
 
   <url type="website">http://wiki.ros.org/motoman_sia10f_support</url>
   <url type="bugtracker">https://github.com/ros-industrial/motoman/issues</url>
@@ -41,6 +42,7 @@
 
   <test_depend>roslaunch</test_depend>
 
+  <exec_depend>industrial_robot_client</exec_depend>
   <exec_depend>joint_state_publisher_gui</exec_depend>
   <exec_depend>motoman_driver</exec_depend>
   <exec_depend>motoman_resources</exec_depend>
