@@ -27,32 +27,32 @@
   testing multpile launch files
 -->
 <launch>
-	<arg name="req_arg" value="default"/>
+  <arg name="req_arg" value="default"/>
   <arg name="controller" value="yrc1000"/>
   
   <group ns="load_gp7">
-	  <include file="$(find motoman_gp7_support)/launch/load_gp7.launch"/>
+    <include file="$(find motoman_gp7_support)/launch/load_gp7.launch"/>
   </group>
 
   <group ns="test_gp7">
-	  <include file="$(find motoman_gp7_support)/launch/test_gp7.launch"/>
+    <include file="$(find motoman_gp7_support)/launch/test_gp7.launch"/>
   </group>
 
   <group ns="robot_interface_streaming_gp7">
     <group ns="$(arg controller)" >
-	    <include file="$(find motoman_gp7_support)/launch/robot_interface_streaming_gp7.launch">
-		    <arg name="robot_ip"   value="$(arg req_arg)" />
+      <include file="$(find motoman_gp7_support)/launch/robot_interface_streaming_gp7.launch">
+        <arg name="robot_ip"   value="$(arg req_arg)" />
         <arg name="controller" value="$(arg controller)"/>
-	    </include>
+      </include>
     </group>
   </group>
 
   <group ns="robot_state_visualize_gp7">
     <group ns="$(arg controller)" >
-	    <include file="$(find motoman_gp7_support)/launch/robot_state_visualize_gp7.launch">
-		    <arg name="robot_ip"   value="$(arg req_arg)" />
+      <include file="$(find motoman_gp7_support)/launch/robot_state_visualize_gp7.launch">
+        <arg name="robot_ip"   value="$(arg req_arg)" />
         <arg name="controller" value="$(arg controller)"/>
-	    </include>
+      </include>
     </group>
   </group>
 

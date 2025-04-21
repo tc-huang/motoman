@@ -27,32 +27,32 @@
   testing multpile launch files
 -->
 <launch>
-	<arg name="req_arg" value="default"/>
+  <arg name="req_arg" value="default"/>
   <arg name="dx200" value="dx200"/>
   
   <group ns="load_mh50">
-	  <include file="$(find motoman_mh50_support)/launch/load_mh50.launch"/>
+    <include file="$(find motoman_mh50_support)/launch/load_mh50.launch"/>
   </group>
 
   <group ns="test_mh50">
-	  <include file="$(find motoman_mh50_support)/launch/test_mh50.launch"/>
+    <include file="$(find motoman_mh50_support)/launch/test_mh50.launch"/>
   </group>
 
   <group ns="robot_interface_streaming_mh50">
     <group ns="dx200" >
-	    <include file="$(find motoman_mh50_support)/launch/robot_interface_streaming_mh50.launch">
-		    <arg name="robot_ip"   value="$(arg req_arg)" />
+      <include file="$(find motoman_mh50_support)/launch/robot_interface_streaming_mh50.launch">
+        <arg name="robot_ip"   value="$(arg req_arg)" />
         <arg name="controller" value="$(arg dx200)"/>
-	    </include>
+      </include>
     </group>
   </group>
 
   <group ns="robot_state_visualize_mh50">
     <group ns="dx200" >
-	    <include file="$(find motoman_mh50_support)/launch/robot_state_visualize_mh50.launch">
-		    <arg name="robot_ip"   value="$(arg req_arg)" />
+      <include file="$(find motoman_mh50_support)/launch/robot_state_visualize_mh50.launch">
+        <arg name="robot_ip"   value="$(arg req_arg)" />
         <arg name="controller" value="$(arg dx200)"/>
-	    </include>
+      </include>
     </group>
   </group>
 
